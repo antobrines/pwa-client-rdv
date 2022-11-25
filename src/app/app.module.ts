@@ -19,16 +19,6 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { DashboardComponent } from './components/user/dashboard/dashboard.component';
 
-const envFirebase = {
-  appId: environment.appId,
-  apiKey: environment.apiKey,
-  authDomain: environment.authDomain,
-  projectId: environment.projectId,
-  storageBucket: environment.storageBucket,
-  messagingSenderId: environment.messagingSenderId,
-  measurementId: environment.measurementId,
-};
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,7 +28,7 @@ const envFirebase = {
   ],
   imports: [
     BrowserModule,
-    AngularFireModule.initializeApp(envFirebase),
+    AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireDatabaseModule,
