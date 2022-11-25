@@ -37,7 +37,7 @@ export class AuthService {
           this.GetUserData(result.user.uid).subscribe((user) => {
             if (user) {
               this.ngZone.run(() => {
-                this.router.navigate(['user-profile']);
+                this.router.navigate(['dashboard']);
               });
             }
           });
