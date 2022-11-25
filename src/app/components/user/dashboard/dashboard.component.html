@@ -1,0 +1,13 @@
+<div *ngIf="!loading">
+  <p>Nom : {{userData.firstName}}</p>
+  <p>Prénom : {{userData.lastName}}</p>
+  <p>Adresse : {{userData.address}}</p>
+  <p>Ville : {{userData.city}}</p>
+  <p>Etat : {{userData.state}}</p>
+  <button (click)="signOut()">Sign out</button>
+</div>
+<div *ngIf="loading">
+  <p>Loading...</p>
+</div>
+
+
