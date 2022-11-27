@@ -1,8 +1,25 @@
-<form [formGroup]="signInForm" (ngSubmit)="login()">
-  <input type="email" formControlName="email" placeholder="Email">
-  <input type="password" formControlName="password" placeholder="Password">
-  <button type="submit">Sign In</button>
-</form>
-<span>{{errorMessage}}</span>
+<mat-card>
+  <mat-card-title>Connexion</mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="signInForm" (ngSubmit)="login()">
+      <p>
+        <mat-form-field>
+          <input type="text" placeholder="Email" formControlName="email" matInput>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field>
+          <input placeholder="Password" formControlName="password" type="password" matInput>
+        </mat-form-field>
+      </p>
+      <p *ngIf="errorMessage" class="error">
+        {{ errorMessage }}
+      </p>
+      <div class="button">
+        <button type="submit" [disabled]="!signInForm.valid" mat-button>Login</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
 
 

@@ -1,12 +1,35 @@
 import { Component, OnInit } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
+  ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
+
+export function matchValidator(
+  matchTo: string,
+  reverse?: boolean
+): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (control.parent && reverse) {
+      const c = (control.parent?.controls as any)[matchTo];
+      if (c) {
+        c.updateValueAndValidity();
+      }
+      return null;
+    }
+    return !!control.parent &&
+      !!control.parent.value &&
+      control.value === (control.parent?.controls as any)[matchTo].value
+      ? null
+      : { matching: true };
+  };
+}
 
 @Component({
   selector: 'app-sign-up',
@@ -14,13 +37,18 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./sign-up.component.scss'],
 })
 export class SignUpComponent implements OnInit {
-  errorMessages = '';
+  errorMessage = '';
   email = new FormControl('', [Validators.required, Validators.email]);
   password = new FormControl('', [
     Validators.required,
     Validators.minLength(6),
+    matchValidator('confirmPassword', true),
   ]);
-  // formcontrol for firstName, lastName, address, city, state
+  confirmPassword = new FormControl('', [
+    Validators.required,
+    Validators.minLength(6),
+    matchValidator('password'),
+  ]);
   firstName = new FormControl('', [Validators.required]);
   lastName = new FormControl('', [Validators.required]);
   address = new FormControl('', [Validators.required]);
@@ -30,6 +58,7 @@ export class SignUpComponent implements OnInit {
   signUpForm = new FormGroup({
     email: this.email,
     password: this.password,
+    confirmPassword: this.confirmPassword,
     firstName: this.firstName,
     lastName: this.lastName,
     address: this.address,
@@ -44,6 +73,7 @@ export class SignUpComponent implements OnInit {
     this.signUpForm = this.formBuilder.group({
       email: this.email,
       password: this.password,
+      confirmPassword: this.confirmPassword,
       firstName: this.firstName,
       lastName: this.lastName,
       address: this.address,
@@ -80,7 +110,7 @@ export class SignUpComponent implements OnInit {
         this.authService.SignUp(user, this.password.value);
       }
     } else {
-      this.errorMessages = 'Please fill the form correctly';
+      this.errorMessage = this.signUpForm.getError('message');
     }
   }
 }

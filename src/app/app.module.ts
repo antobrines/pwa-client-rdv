@@ -9,7 +9,7 @@ import { SignInComponent } from './components/user/sign-in/sign-in.component';
 import { SignUpComponent } from './components/user/sign-up/sign-up.component';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AuthService } from './services/auth.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Firebase
 import { AngularFireModule } from '@angular/fire/compat';
@@ -19,12 +19,21 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { DashboardComponent } from './components/user/dashboard/dashboard.component';
 
+// material
+import { MaterialModule } from './material/material/material.module';
+import { LayoutComponent } from './layout/layout.component';
+import { HeaderComponent } from './navigation/header/header.component';
+import { SidenavComponent } from './navigation/sidenav/sidenav.component';
+
 @NgModule({
   declarations: [
     AppComponent,
     SignInComponent,
     SignUpComponent,
     DashboardComponent,
+    LayoutComponent,
+    HeaderComponent,
+    SidenavComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,6 +51,8 @@ import { DashboardComponent } from './components/user/dashboard/dashboard.compon
     }),
     FormsModule,
     ReactiveFormsModule,
+    MaterialModule,
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

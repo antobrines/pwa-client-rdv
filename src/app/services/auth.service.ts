@@ -1,5 +1,5 @@
 import { User } from './../models/user';
-import { Injectable, NgZone } from '@angular/core';
+import { EventEmitter, Injectable, NgZone, Output } from '@angular/core';
 import * as auth from 'firebase/auth';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import {
@@ -12,19 +12,23 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AuthService {
+  @Output() public isLoggedIn: EventEmitter<boolean> = new EventEmitter();
+
   constructor(
     public afs: AngularFirestore,
     public afAuth: AngularFireAuth,
     public router: Router,
     public ngZone: NgZone
   ) {
-    this.afAuth.authState.subscribe((user) => {
+    this.afAuth.onAuthStateChanged((user) => {
       if (user) {
         localStorage.setItem('user', JSON.stringify(user));
         JSON.parse(localStorage.getItem('user')!);
+        this.isLoggedIn.emit(true);
       } else {
-        localStorage.setItem('user', 'null');
+        localStorage.setItem('user', null!);
         JSON.parse(localStorage.getItem('user')!);
+        this.isLoggedIn.emit(false);
       }
     });
   }
@@ -36,9 +40,7 @@ export class AuthService {
         if (result.user) {
           this.GetUserData(result.user.uid).subscribe((user) => {
             if (user) {
-              this.ngZone.run(() => {
-                this.router.navigate(['dashboard']);
-              });
+              this.router.navigate(['dashboard']);
             }
           });
         }
@@ -64,7 +66,7 @@ export class AuthService {
     return this.afAuth.currentUser
       .then((u: any) => u.sendEmailVerification())
       .then(() => {
-        this.router.navigate(['verify-email-address']);
+        // TODO EMAIL PAGE
       });
   }
 
@@ -77,11 +79,6 @@ export class AuthService {
       .catch((error) => {
         window.alert(error);
       });
-  }
-
-  get isLoggedIn(): boolean {
-    const user = JSON.parse(localStorage.getItem('user')!);
-    return user !== null && user.emailVerified !== false ? true : false;
   }
 
   CreateUser(user: User, firebaseUser: any) {
@@ -111,8 +108,11 @@ export class AuthService {
 
   SignOut() {
     return this.afAuth.signOut().then(() => {
-      localStorage.removeItem('user');
+      localStorage.clear();
+      this.isLoggedIn.emit(false);
       this.router.navigate(['']);
     });
   }
+
+  GetAuth() {}
 }
