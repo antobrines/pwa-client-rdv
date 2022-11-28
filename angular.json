@@ -87,6 +87,14 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "custom": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.custom.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -99,6 +107,9 @@
             },
             "development": {
               "browserTarget": "pwa-client-rdv-14:build:development"
+            },
+            "custom": {
+              "browserTarget": "pwa-client-rdv-14:build:custom"
             }
           },
           "defaultConfiguration": "development"

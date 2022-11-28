@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "config": "npx ts-node set-env.ts",
+    "start": "npm run config && ng serve --configuration=custom",
+    "build": "npm run config && ng build --configuration=custom",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -22,6 +23,7 @@
     "@angular/platform-browser-dynamic": "^14.2.0",
     "@angular/router": "^14.2.0",
     "@angular/service-worker": "^14.2.0",
+    "dotenv": "^16.0.3",
     "firebase": "^9.14.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
