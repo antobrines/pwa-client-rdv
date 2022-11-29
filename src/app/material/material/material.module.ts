@@ -11,6 +11,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatGridListModule } from '@angular/material/grid-list';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+
 
 @NgModule({
   declarations: [],
@@ -28,6 +30,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatFormFieldModule,
     MatInputModule,
     MatGridListModule,
+    MatAutocompleteModule
   ],
   exports: [
     CommonModule,
@@ -42,6 +45,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatFormFieldModule,
     MatInputModule,
     MatGridListModule,
+    MatAutocompleteModule
   ],
 })
 export class MaterialModule {}

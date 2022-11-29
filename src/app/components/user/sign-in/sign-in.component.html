@@ -15,6 +15,9 @@
       <p *ngIf="errorMessage" class="error">
         {{ errorMessage }}
       </p>
+      <p class="sign-up">
+        Pas de compte ? <a routerLink="/register">Inscrivez-vous</a>
+      </p>
       <div class="button">
         <button type="submit" [disabled]="!signInForm.valid" mat-button>Login</button>
       </div>

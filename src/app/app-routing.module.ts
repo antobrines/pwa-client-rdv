@@ -8,6 +8,7 @@ import {
   redirectLoggedInTo,
   redirectUnauthorizedTo,
 } from '@angular/fire/compat/auth-guard';
+import { ConfirmComponent } from './components/user/confirm/confirm.component';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['']);
 const redirectLoggedInToItems = () => redirectLoggedInTo(['dashboard']);
@@ -30,6 +31,10 @@ const routes: Routes = [
     component: DashboardComponent,
     canActivate: [AngularFireAuthGuard],
     data: { authGuardPipe: redirectUnauthorizedToLogin },
+  },
+  {
+    path: 'confirm-email',
+    component: ConfirmComponent,
   },
   { path: '**', redirectTo: '' },
 ];

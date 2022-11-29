@@ -10,6 +10,7 @@ import {
 } from '@angular/forms';
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
+import { GoogleService } from 'src/app/services/google.service';
 
 export function matchValidator(
   matchTo: string,
@@ -51,9 +52,7 @@ export class SignUpComponent implements OnInit {
   ]);
   firstName = new FormControl('', [Validators.required]);
   lastName = new FormControl('', [Validators.required]);
-  address = new FormControl('', [Validators.required]);
-  city = new FormControl('', [Validators.required]);
-  state = new FormControl('', [Validators.required]);
+  address = this.googleService.address;
 
   signUpForm = new FormGroup({
     email: this.email,
@@ -62,13 +61,12 @@ export class SignUpComponent implements OnInit {
     firstName: this.firstName,
     lastName: this.lastName,
     address: this.address,
-    city: this.city,
-    state: this.state,
   });
 
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    public googleService: GoogleService
   ) {
     this.signUpForm = this.formBuilder.group({
       email: this.email,
@@ -77,34 +75,31 @@ export class SignUpComponent implements OnInit {
       firstName: this.firstName,
       lastName: this.lastName,
       address: this.address,
-      city: this.city,
-      state: this.state,
     });
   }
 
   ngOnInit(): void {}
 
-  signUp() {
+  async signUp() {
     if (this.signUpForm.valid) {
       if (
         this.email.value &&
         this.password.value &&
         this.firstName.value &&
         this.lastName.value &&
-        this.address.value &&
-        this.city.value &&
-        this.state.value
+        this.address.value
       ) {
+        const latLng = await this.googleService.getLatLng(this.address.value);
         const user: User = {
           uid: '',
           email: this.email.value,
           firstName: this.firstName.value,
           lastName: this.lastName.value,
-          address: this.address.value,
-          city: this.city.value,
-          state: this.state.value,
-          latitude: null,
-          longitude: null,
+          address: this.googleService.name,
+          city: this.googleService.city,
+          postal_code: this.googleService.postal_code,
+          latitude: latLng.lat,
+          longitude: latLng.lng,
           isPrestatary: false,
         };
         this.authService.SignUp(user, this.password.value);

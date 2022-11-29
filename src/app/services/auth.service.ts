@@ -7,6 +7,7 @@ import {
   AngularFirestoreDocument,
 } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,8 @@ export class AuthService {
     public afs: AngularFirestore,
     public afAuth: AngularFireAuth,
     public router: Router,
-    public ngZone: NgZone
+    public ngZone: NgZone,
+    private location: Location
   ) {
     this.afAuth.onAuthStateChanged((user) => {
       if (user) {
@@ -56,6 +58,8 @@ export class AuthService {
       .then((result) => {
         this.SendVerificationMail();
         this.CreateUser(user, result.user);
+        this.router.navigate(['confirm-email']);
+        this.SignOut(false);
       })
       .catch((error) => {
         window.alert(error.message);
@@ -64,7 +68,9 @@ export class AuthService {
 
   SendVerificationMail() {
     return this.afAuth.currentUser
-      .then((u: any) => u.sendEmailVerification())
+      .then((u: any) => u.sendEmailVerification({
+        url: `${window.location.origin}/confirm-email?confirm=true`,
+      }))
       .then(() => {
         // TODO EMAIL PAGE
       });
@@ -86,16 +92,17 @@ export class AuthService {
       `users/${firebaseUser.uid}`
     );
     const userData: User = {
-      uid: user.uid,
+      uid: firebaseUser.uid,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
       address: user.address,
       city: user.city,
-      state: user.state,
+      postal_code: user.postal_code,
       latitude: user.latitude,
       longitude: user.longitude,
       isPrestatary: user.isPrestatary,
+
     };
     return userRef.set(userData, {
       merge: true,
@@ -106,11 +113,12 @@ export class AuthService {
     return this.afs.doc(`users/${uid}`).valueChanges();
   }
 
-  SignOut() {
+  SignOut(redirect = true) {
     return this.afAuth.signOut().then(() => {
       localStorage.clear();
       this.isLoggedIn.emit(false);
-      this.router.navigate(['']);
+      if(redirect)
+        this.router.navigate(['']);
     });
   }
 

@@ -1,7 +1,7 @@
 <mat-card>
   <mat-card-title>Inscription</mat-card-title>
   <mat-card-content>
-    <form [formGroup]="signUpForm" (ngSubmit)="signUp()">  
+    <form [formGroup]="signUpForm" (ngSubmit)="signUp()">
       <mat-form-field>
         <input matInput placeholder="Nom" formControlName="lastName">
       </mat-form-field>
@@ -12,20 +12,24 @@
         <input matInput placeholder="Email" formControlName="email">
       </mat-form-field>
       <mat-form-field>
-        <input matInput placeholder="Mot de passe" formControlName="password">
+        <input matInput placeholder="Mot de passe" formControlName="password" type="password">
       </mat-form-field>
       <mat-form-field>
-        <input matInput placeholder="Confirmation du mot de passe" formControlName="confirmPassword">
+        <input matInput placeholder="Confirmation du mot de passe" formControlName="confirmPassword" type="password">
       </mat-form-field>
       <mat-form-field>
-        <input matInput placeholder="Adresse" formControlName="address">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput placeholder="Code postal" formControlName="state">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput placeholder="Ville" formControlName="city">
-      </mat-form-field>
+        <input type="text"
+        placeholder="Adresse"
+        [formControl]="googleService.address"
+        [matAutocomplete]="auto"
+        formControlName="address"
+        matInput>
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let street of googleService.filteredStreets | async" [value]="street">
+            {{street}}
+          </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
       <p *ngIf="errorMessage" class="error">
         {{ errorMessage }}
       </p>

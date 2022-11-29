@@ -24,6 +24,9 @@ import { MaterialModule } from './material/material/material.module';
 import { LayoutComponent } from './layout/layout.component';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavComponent } from './navigation/sidenav/sidenav.component';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { LoadingComponent } from './components/loading/loading.component';
+import { ConfirmComponent } from './components/user/confirm/confirm.component';
 
 @NgModule({
   declarations: [
@@ -34,9 +37,13 @@ import { SidenavComponent } from './navigation/sidenav/sidenav.component';
     LayoutComponent,
     HeaderComponent,
     SidenavComponent,
+    LoadingComponent,
+    ConfirmComponent,
   ],
   imports: [
     BrowserModule,
+    GoogleMapsModule,
+    MaterialModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule,
@@ -51,7 +58,6 @@ import { SidenavComponent } from './navigation/sidenav/sidenav.component';
     }),
     FormsModule,
     ReactiveFormsModule,
-    MaterialModule,
     BrowserAnimationsModule,
   ],
   providers: [],

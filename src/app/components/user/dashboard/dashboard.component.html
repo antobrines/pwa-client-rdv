@@ -3,11 +3,9 @@
   <p>Prénom : {{userData.lastName}}</p>
   <p>Adresse : {{userData.address}}</p>
   <p>Ville : {{userData.city}}</p>
-  <p>Etat : {{userData.state}}</p>
-  <button (click)="signOut()">Sign out</button>
+  <p>Code postal : {{userData.postal_code}}</p>
 </div>
 <div *ngIf="loading">
-  <p>Loading...</p>
+  <app-loading></app-loading>
 </div>
-
 
