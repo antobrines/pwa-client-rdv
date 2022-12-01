@@ -27,7 +27,7 @@ export class GoogleService {
     const autocompleteService = new google.maps.places.AutocompleteService();
     const placeService = new google.maps.places.PlacesService(document.createElement('div'));
     if (value !== '') {
-      autocompleteService.getPlacePredictions({ input: value }, (predictions, status) => {
+      autocompleteService.getPlacePredictions({ input: value, componentRestrictions: {country: 'fr'} }, (predictions, status) => {
         if (
           status != google.maps.places.PlacesServiceStatus.OK ||
           !predictions

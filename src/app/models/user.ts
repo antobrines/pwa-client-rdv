@@ -7,6 +7,7 @@ export interface User {
   city: string;
   postal_code: string;
   isPrestatary: boolean;
-  latitude: number | null;
-  longitude: number | null;
+  lat: number;
+  lng: number;
+  geohash: string;
 }

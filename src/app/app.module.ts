@@ -28,6 +28,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { LoadingComponent } from './components/loading/loading.component';
 import { ConfirmComponent } from './components/user/confirm/confirm.component';
 import { HotToastModule } from '@ngneat/hot-toast';
+import { MapsComponent } from './components/maps/maps.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { HotToastModule } from '@ngneat/hot-toast';
     SidenavComponent,
     LoadingComponent,
     ConfirmComponent,
+    MapsComponent,
   ],
   imports: [
     BrowserModule,

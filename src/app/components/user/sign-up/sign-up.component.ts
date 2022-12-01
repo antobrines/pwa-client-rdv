@@ -98,9 +98,10 @@ export class SignUpComponent implements OnInit {
           address: this.googleService.name,
           city: this.googleService.city,
           postal_code: this.googleService.postal_code,
-          latitude: latLng.lat,
-          longitude: latLng.lng,
+          lat: latLng.lat,
+          lng: latLng.lng,
           isPrestatary: false,
+          geohash: '',
         };
         this.authService.SignUp(user, this.password.value);
       }

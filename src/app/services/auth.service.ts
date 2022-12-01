@@ -7,6 +7,7 @@ import {
 } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
+import { GeofireService } from './geofire.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,8 @@ export class AuthService {
     public afAuth: AngularFireAuth,
     public router: Router,
     public ngZone: NgZone,
-    private toast: HotToastService
+    private toast: HotToastService,
+    private geofireService: GeofireService
   ) {
     this.afAuth.onAuthStateChanged((user) => {
       if (user) {
@@ -98,6 +100,7 @@ export class AuthService {
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(
       `users/${firebaseUser.uid}`
     );
+    const hash = this.geofireService.getHash(user.lat, user.lng);
     const userData: User = {
       uid: firebaseUser.uid,
       email: user.email,
@@ -106,9 +109,10 @@ export class AuthService {
       address: user.address,
       city: user.city,
       postal_code: user.postal_code,
-      latitude: user.latitude,
-      longitude: user.longitude,
+      lat: user.lat,
+      lng: user.lng,
       isPrestatary: user.isPrestatary,
+      geohash: hash,
     };
     return userRef.set(userData, {
       merge: true,

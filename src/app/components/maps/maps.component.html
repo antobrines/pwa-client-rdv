@@ -1,0 +1,16 @@
+<!-- map in center of the page -->
+<google-map [center]="centerInitial" (boundsChanged)="boundsChange()" width="100%" [options]="options">
+  <map-marker
+    #markerT="mapMarker"
+    *ngFor="let marker of markers"
+    [position]="marker.position"
+    [label]="marker.label"
+    [title]="marker.title"
+    [options]="marker.options"
+    (mapClick)="openInfo(markerT, marker)"
+  >
+  </map-marker>
+
+  <map-info-window>{{ infoContent }}</map-info-window>
+</google-map>
+
