@@ -1,13 +1,12 @@
 import { User } from './../models/user';
 import { EventEmitter, Injectable, NgZone, Output } from '@angular/core';
-import * as auth from 'firebase/auth';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import {
   AngularFirestore,
   AngularFirestoreDocument,
 } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { HotToastService } from '@ngneat/hot-toast';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +19,7 @@ export class AuthService {
     public afAuth: AngularFireAuth,
     public router: Router,
     public ngZone: NgZone,
-    private location: Location
+    private toast: HotToastService
   ) {
     this.afAuth.onAuthStateChanged((user) => {
       if (user) {
@@ -48,11 +47,15 @@ export class AuthService {
         }
       })
       .catch((error) => {
-        window.alert(error.message);
+        this.toast.error(error.message);
       });
   }
 
   SignUp(user: User, password: string) {
+    this.toast.loading('Votre compte est en train d\'être crée', {
+      id: 'userCreated',
+      autoClose: false,
+    });
     return this.afAuth
       .createUserWithEmailAndPassword(user.email, password)
       .then((result) => {
@@ -60,11 +63,13 @@ export class AuthService {
         this.CreateUser(user, result.user).then((e) => {
           this.router.navigate(['confirm-email']);
           this.SignOut(false);
+          this.toast.close('userCreated');
         });
 
       })
       .catch((error) => {
-        window.alert(error.message);
+        this.toast.close('userCreated');
+        this.toast.error(error.message);
       });
   }
 
@@ -82,10 +87,10 @@ export class AuthService {
     return this.afAuth
       .sendPasswordResetEmail(passwordResetEmail)
       .then(() => {
-        window.alert('Password reset email sent, check your inbox.');
+        this.toast.success('Demande de réinitialisation envoyée');
       })
       .catch((error) => {
-        window.alert(error);
+        this.toast.error(error.message);
       });
   }
 
@@ -104,7 +109,6 @@ export class AuthService {
       latitude: user.latitude,
       longitude: user.longitude,
       isPrestatary: user.isPrestatary,
-
     };
     return userRef.set(userData, {
       merge: true,

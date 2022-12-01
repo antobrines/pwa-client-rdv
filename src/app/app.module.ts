@@ -27,6 +27,7 @@ import { SidenavComponent } from './navigation/sidenav/sidenav.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { LoadingComponent } from './components/loading/loading.component';
 import { ConfirmComponent } from './components/user/confirm/confirm.component';
+import { HotToastModule } from '@ngneat/hot-toast';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,11 @@ import { ConfirmComponent } from './components/user/confirm/confirm.component';
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    HotToastModule.forRoot(
+      {
+        position: 'bottom-center',
+      }
+    ),
   ],
   providers: [],
   bootstrap: [AppComponent],
