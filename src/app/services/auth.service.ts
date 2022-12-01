@@ -57,9 +57,11 @@ export class AuthService {
       .createUserWithEmailAndPassword(user.email, password)
       .then((result) => {
         this.SendVerificationMail();
-        this.CreateUser(user, result.user);
-        this.router.navigate(['confirm-email']);
-        this.SignOut(false);
+        this.CreateUser(user, result.user).then((e) => {
+          this.router.navigate(['confirm-email']);
+          this.SignOut(false);
+        });
+
       })
       .catch((error) => {
         window.alert(error.message);
