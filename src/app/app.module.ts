@@ -29,6 +29,7 @@ import { LoadingComponent } from './components/loading/loading.component';
 import { ConfirmComponent } from './components/user/confirm/confirm.component';
 import { HotToastModule } from '@ngneat/hot-toast';
 import { MapsComponent } from './components/maps/maps.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { MapsComponent } from './components/maps/maps.component';
   ],
   imports: [
     BrowserModule,
+    FlexLayoutModule,
     GoogleMapsModule,
     MaterialModule,
     AngularFireModule.initializeApp(environment.firebase),
@@ -62,11 +64,9 @@ import { MapsComponent } from './components/maps/maps.component';
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    HotToastModule.forRoot(
-      {
-        position: 'bottom-center',
-      }
-    ),
+    HotToastModule.forRoot({
+      position: 'bottom-center',
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -45,6 +45,8 @@ export class MapsComponent implements OnInit {
   ngOnInit(): void {}
 
   boundsChange() {
+    // getCenter
+    this.centerCurrent = this.map.getCenter()?.toJSON() || this.centerInitial;
     const bounds = this.map.getBounds()?.toJSON();
     const east = bounds?.east || 0;
     const north = bounds?.north || 0;
@@ -69,10 +71,18 @@ export class MapsComponent implements OnInit {
               lat: lat,
               lng: lng,
             },
-            title: data.firstName,
-            uid: data.uid
+            title: `${data.firstName} ${data.lastName}`,
+            uid: data.uid,
+            distance: Math.round(
+              this.geofireService.getDistanceBetweenKm(
+                lat,
+                lng,
+                this.centerInitial.lat,
+                this.centerInitial.lng
+              )
+            ),
           };
-          if (!this.markers.find((m: any) => m.title === marker.title)) {
+          if (!this.markers.find((m: any) => m.uid === marker.uid)) {
             this.markers.push(marker);
           }
         });
