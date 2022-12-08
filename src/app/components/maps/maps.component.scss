@@ -1,0 +1,16 @@
+@import '@angular/material/theming';
+
+.highlight {
+  background-color: mat-color($mat-purple, 100);
+}
+
+.clickable {
+  cursor: pointer;
+  &:hover {
+    @include mat-elevation(8);
+  }
+}
+
+::ng-deep .gm-style .gm-style-iw-c button {
+  display: none !important;
+}

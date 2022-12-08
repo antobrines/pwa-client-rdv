@@ -12,6 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 @NgModule({
   declarations: [],
@@ -30,6 +31,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatInputModule,
     MatGridListModule,
     MatAutocompleteModule,
+    MatDatepickerModule
   ],
   exports: [
     CommonModule,
@@ -45,6 +47,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatInputModule,
     MatGridListModule,
     MatAutocompleteModule,
+    MatDatepickerModule
   ],
 })
 export class MaterialModule {}

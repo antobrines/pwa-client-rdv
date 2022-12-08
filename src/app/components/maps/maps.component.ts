@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
+import { MatCard } from '@angular/material/card';
+import { AuthService } from 'src/app/services/auth.service';
 import { GeofireService } from 'src/app/services/geofire.service';
+import { GoogleService } from 'src/app/services/google.service';
 
 @Component({
   selector: 'app-maps',
@@ -21,11 +24,16 @@ export class MapsComponent implements OnInit {
   };
   infoContent = '';
 
-  @ViewChild(MapInfoWindow)
-  info!: MapInfoWindow;
-  @ViewChild(GoogleMap) map!: GoogleMap;
 
-  constructor(private geofireService: GeofireService) {
+  @ViewChild(MapInfoWindow) info!: MapInfoWindow;
+  @ViewChild(GoogleMap) map!: GoogleMap;
+  @ViewChild(MatCard) card!: MatCard;
+
+  constructor(
+    private geofireService: GeofireService,
+    private googleService: GoogleService,
+    private authService: AuthService
+  ) {
     navigator.geolocation.getCurrentPosition((position) => {
       this.centerInitial = {
         lat: position.coords.latitude,
@@ -39,13 +47,50 @@ export class MapsComponent implements OnInit {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       };
+      // Add the current location
+      this.markers.push({
+        position: {
+          lat: this.myPostion.lat,
+          lng: this.myPostion.lng,
+        },
+        title: 'Ma position',
+        uid: 0,
+        distance: 0,
+        options: {
+          animation: google.maps.Animation.DROP,
+          icon: {
+            url: 'assets/icons/myPosition.png',
+            scaledSize: new google.maps.Size(50, 50),
+          },
+        },
+      });
+      // Add the home location
+      // this.authService.GetAuth().then((user: any) => {
+      //   this.authService.GetUserData(user.uid).subscribe((data: any) => {
+      //     this.markers.push({
+      //       position: {
+      //         lat: data.lat,
+      //         lng: data.lng,
+      //       },
+      //       title: `Chez moi`,
+      //       uid: 0,
+      //       distance: 0,
+      //       options: {
+      //         animation: google.maps.Animation.DROP,
+      //         icon: {
+      //           url: 'assets/icons/myPositionHome.png',
+      //           scaledSize: new google.maps.Size(40, 40),
+      //         },
+      //       },
+      //     });
+      //   });
+      // });
     });
   }
 
   ngOnInit(): void {}
 
   boundsChange() {
-    // getCenter
     this.centerCurrent = this.map.getCenter()?.toJSON() || this.centerInitial;
     const bounds = this.map.getBounds()?.toJSON();
     const east = bounds?.east || 0;
@@ -58,7 +103,7 @@ export class MapsComponent implements OnInit {
     );
     const snapShots = this.geofireService.getPrestatariesInRadius(
       this.centerCurrent,
-      radius * 1000
+      radius * 500
     );
     snapShots.then((snapShots) => {
       snapShots.forEach((snapShot: any) => {
@@ -73,6 +118,7 @@ export class MapsComponent implements OnInit {
             },
             title: `${data.firstName} ${data.lastName}`,
             uid: data.uid,
+            isPrestatary: data.isPrestatary,
             distance: Math.round(
               this.geofireService.getDistanceBetweenKm(
                 lat,
@@ -81,9 +127,27 @@ export class MapsComponent implements OnInit {
                 this.centerInitial.lng
               )
             ),
+            isHighlighted: false,
           };
-          if (!this.markers.find((m: any) => m.uid === marker.uid)) {
+          if (
+            !this.markers.find((m: any) => m.uid === marker.uid) &&
+            data.isPrestatary
+          ) {
             this.markers.push(marker);
+            this.googleService
+              .getDistanceBetweenKmInNavigation(
+                lat,
+                lng,
+                this.centerInitial.lat,
+                this.centerInitial.lng
+              )
+              .then((distance: any) => {
+                marker.distance = Math.round(distance * 100) / 100;
+                this.markers = this.markers.filter(
+                  (m: any) => m.uid !== marker.uid
+                );
+                this.markers.push(marker);
+              });
           }
         });
       });
@@ -92,6 +156,26 @@ export class MapsComponent implements OnInit {
 
   openInfo(marker: MapMarker, content: any) {
     this.infoContent = content.title;
+    const position = this.info.infoWindow?.get('position');
     this.info.open(marker);
+    this.info.infoWindow?.focus();
+    if (position === undefined) this.onCardClick(content, 0);
+    else {
+      this.onCardClick(content);
+      this.info.infoWindow?.close();
+      this.info.infoWindow?.set('position', undefined);
+    }
+  }
+
+  onCardClick(marker: any, position: any = null) {
+    this.markers = this.markers.map((m: any) => {
+      if (m.uid === marker.uid) {
+        if (position == null) m.isHighlighted = !m.isHighlighted;
+        else if (position === 0) m.isHighlighted = true;
+      } else {
+        m.isHighlighted = false;
+      }
+      return m;
+    });
   }
 }

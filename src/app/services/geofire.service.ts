@@ -29,7 +29,9 @@ export class GeofireService {
     const promises = [];
     for (const b of bounds) {
       const q = this.afs.collection('users',
-      (ref) => ref.orderBy('geohash').startAt(b[0]).endAt(b[1]));
+      (ref) => {
+        return ref.orderBy('geohash').startAt(b[0]).endAt(b[1]);
+      });
       promises.push(q.get().toPromise());
     }
     const snapShots = await Promise.all(promises);

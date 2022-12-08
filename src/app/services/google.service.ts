@@ -80,4 +80,27 @@ export class GoogleService {
       });
     });
   }
+
+  getDistanceBetweenKmInNavigation(latStart: number, lngStart: number, latEnd: number, lngEnd: number) {
+    return new Promise((resolve, reject) => {
+      const directionsService = new google.maps.DirectionsService();
+      const origin = new google.maps.LatLng(latStart, lngStart);
+      const destination = new google.maps.LatLng(latEnd, lngEnd);
+      const request = {
+        origin: origin,
+        destination: destination,
+        travelMode: google.maps.TravelMode.DRIVING,
+        avoidHighways: true
+      };
+      directionsService.route(request, (result, status) => {
+        if (status === 'OK') {
+          if(result) {
+            resolve((result.routes[0].legs[0].distance?.value || 0) / 1000);
+          }
+        } else {
+          reject(status);
+        }
+      });
+    });
+  }
 }

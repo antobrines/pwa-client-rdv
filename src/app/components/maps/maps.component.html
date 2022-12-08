@@ -1,7 +1,13 @@
 <div fxHide.lt-md>
-  <div fxLayout="row">
+  <div fxLayout="row" [style.height.px]="500">
     <div fxFlex="70%" class="flex-wrapper" [style.margin-top]="'12px'">
-      <google-map [center]="centerInitial" (boundsChanged)="boundsChange()" width="100%" [options]="options"  >
+      <google-map
+        [center]="centerInitial"
+        (boundsChanged)="boundsChange()"
+        width="100%"
+        height="100%"
+        [options]="options"
+      >
         <map-marker
           #markerT="mapMarker"
           *ngFor="let marker of markers"
@@ -17,15 +23,28 @@
     </div>
     <!-- margin top -->
     <div fxFlex="30%" class="flex-wrapper">
-      <mat-card *ngFor="let marker of markers" [style.margin-top]="'12px'" [style.margin-left]="'12px'">
-        <mat-card-header fxLayoutAlign="center center">
-          <mat-card-title>{{ marker.title }}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p>Distance: {{ marker.distance }}km</p>
-        </mat-card-content>
-      </mat-card>
+      <div *ngFor="let marker of markers">
+        <mat-card
+          [style.margin-top]="'12px'"
+          [style.margin-left]="'12px'"
+          *ngIf="marker.isPrestatary == true"
+          [ngClass]="{'highlight' : marker.isHighlighted}"
+          class="clickable"
+          (click)="onCardClick(marker)"
+        >
+          <mat-card-header fxLayoutAlign="center center">
+            <mat-card-title>{{ marker.title }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Distance: {{ marker.distance }}km</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  <div fxLayout="row" [style.marginTop.px]="10">
+    <div fxFlex="70%" class="flex-wrapper">
+      <span>loading...</span>
+    </div>
   </div>
 </div>
-
-

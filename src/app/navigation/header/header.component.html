@@ -1,23 +1,10 @@
 <mat-toolbar color="primary">
-  <div fxHide.gt-sm>
+  <div>
       <button mat-icon-button (click)="onToggleSidenav()">
           <mat-icon>menu</mat-icon>
       </button>
   </div>
-  <div fxHide.lt-md>
-    <mat-nav-list fxLayout>
-        <mat-list-item fxFlex>
-            <a [routerLink]="['/']">Accueil</a>
-        </mat-list-item>
-        <mat-list-item fxFlex *ngIf="isLoggedIn">
-            <a [routerLink]="['/dashboard']">Dashboard</a>
-        </mat-list-item>
-        <mat-list-item fxFlex *ngIf="isLoggedIn">
-            <a [routerLink]="['/maps']">Map</a>
-        </mat-list-item>
-        <mat-list-item fxFlex *ngIf="isLoggedIn" (click)="authService.SignOut()">
-            <a >Déconnexion</a>
-        </mat-list-item> 
-    </mat-nav-list>  
+  <div>
+      <a [routerLink]="['/']">Accueil</a>
   </div>
 </mat-toolbar>
