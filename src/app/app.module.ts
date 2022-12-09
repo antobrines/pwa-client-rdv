@@ -5,31 +5,34 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { SignInComponent } from './components/user/sign-in/sign-in.component';
-import { SignUpComponent } from './components/user/sign-up/sign-up.component';
-
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-// Firebase
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
-import { DashboardComponent } from './components/user/dashboard/dashboard.component';
 
-// material
 import { MaterialModule } from './material/material/material.module';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { HotToastModule } from '@ngneat/hot-toast';
+import { ScheduleModule } from '@syncfusion/ej2-angular-schedule';
+import { DayService, WeekService, WorkWeekService, MonthService, AgendaService } from '@syncfusion/ej2-angular-schedule';
+import { DropDownListAllModule } from '@syncfusion/ej2-angular-dropdowns';
+
+
+import { DashboardComponent } from './components/user/dashboard/dashboard.component';
+import { MapsComponent } from './components/maps/maps.component';
 import { LayoutComponent } from './layout/layout.component';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavComponent } from './navigation/sidenav/sidenav.component';
-import { GoogleMapsModule } from '@angular/google-maps';
 import { LoadingComponent } from './components/loading/loading.component';
 import { ConfirmComponent } from './components/user/confirm/confirm.component';
-import { HotToastModule } from '@ngneat/hot-toast';
-import { MapsComponent } from './components/maps/maps.component';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { SignInComponent } from './components/user/sign-in/sign-in.component';
+import { SignUpComponent } from './components/user/sign-up/sign-up.component';
+import { CalendarComponent } from './components/calendar/calendar.component';
 
 @NgModule({
   declarations: [
@@ -43,9 +46,12 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     LoadingComponent,
     ConfirmComponent,
     MapsComponent,
+    CalendarComponent,
   ],
   imports: [
     BrowserModule,
+    ScheduleModule,
+    DropDownListAllModule,
     FlexLayoutModule,
     GoogleMapsModule,
     MaterialModule,
@@ -68,7 +74,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
       position: 'bottom-center',
     }),
   ],
-  providers: [],
+  providers: [DayService, WeekService, WorkWeekService, MonthService, AgendaService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

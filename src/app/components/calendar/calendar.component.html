@@ -1,0 +1,52 @@
+<ejs-schedule  (cellClick)="onCellClick($event)" (popupOpen)='onPopupOpen($event)' (created)="onCreated()" (renderCell)="onRenderCell($event)" (actionBegin)="onActionBegin($event)" [workDays]='daysWork' [firstDayOfWeek]='1'>
+  <e-views>
+    <e-view option="Month"></e-view>
+  </e-views>
+
+  <ng-template #quickInfoTemplatesHeader let-data>
+    <div class="quick-info-header">
+      <div class="quick-info-header-content">
+        <div class="quick-info-title">Veuillez choisir une date</div>
+      </div>
+    </div>
+  </ng-template>
+  <!-- Content Template -->
+  <ng-template #quickInfoTemplatesContent let-data>
+    <ng-container
+      [ngTemplateOutlet]="cellContent"
+      [ngTemplateOutletContext]="{ data: data }"
+    ></ng-container>
+  </ng-template>
+  <ng-template #cellContent let-data="data">
+    <div class="quick-info-content">
+      <div class="e-cell-content">
+        <div class="content-area">
+          <ejs-dropdownlist
+            id="eventType"
+            #eventTypeObj
+            [dataSource]="categories"
+            [fields]="categoriesFields"
+            placeholder="Choose Type"
+            index="{{ 0 }}"
+            popupHeight="200px"
+          ></ejs-dropdownlist>
+        </div>
+        <div class="content-area"></div>
+      </div>
+    </div>
+  </ng-template>
+  <!-- Footer Template -->
+  <ng-template #quickInfoTemplatesFooter let-data>
+    <ng-container
+      [ngTemplateOutlet]="cellFooter"
+      [ngTemplateOutletContext]="{ data: data }"
+    ></ng-container>
+  </ng-template>
+  <ng-template #cellFooter let-data="data">
+    <div class="e-cell-footer">
+      <button id="add" (click)="buttonClickActions($event)" mat-raised-button>
+        Valider
+      </button>
+    </div>
+  </ng-template>
+</ejs-schedule>

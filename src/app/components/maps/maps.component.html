@@ -1,6 +1,6 @@
 <div fxHide.lt-md>
-  <div fxLayout="row" [style.height.px]="500">
-    <div fxFlex="70%" class="flex-wrapper" [style.margin-top]="'12px'">
+  <div fxLayout="row" class="map-container">
+    <div fxFlex="60%" class="flex-wrapper" [style.margin-top]="'12px'">
       <google-map
         [center]="centerInitial"
         (boundsChanged)="boundsChange()"
@@ -22,29 +22,29 @@
       </google-map>
     </div>
     <!-- margin top -->
-    <div fxFlex="30%" class="flex-wrapper">
-      <div *ngFor="let marker of markers">
-        <mat-card
-          [style.margin-top]="'12px'"
-          [style.margin-left]="'12px'"
-          *ngIf="marker.isPrestatary == true"
-          [ngClass]="{'highlight' : marker.isHighlighted}"
-          class="clickable"
-          (click)="onCardClick(marker)"
-        >
-          <mat-card-header fxLayoutAlign="center center">
-            <mat-card-title>{{ marker.title }}</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <p>Distance: {{ marker.distance }}km</p>
-          </mat-card-content>
-        </mat-card>
+    <div fxFlex="40%" class="flex-wrapper" fxLayout="column" fxFlex fxLayoutGap="12px">
+      <div  fxFlex class="scrollable">
+        <div *ngFor="let marker of markers">
+          <mat-card
+            [style.margin-top]="'12px'"
+            [style.margin-left]="'12px'"
+            *ngIf="marker.isPrestatary == true"
+            [ngClass]="{'highlight' : marker.isHighlighted}"
+            class="clickable"
+            (click)="onCardClick(marker)"
+          >
+            <mat-card-header fxLayoutAlign="center center">
+              <mat-card-title>{{ marker.title }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Distance: {{ marker.distance }}km</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
       </div>
-    </div>
-  </div>
-  <div fxLayout="row" [style.marginTop.px]="10">
-    <div fxFlex="70%" class="flex-wrapper">
-      <span>loading...</span>
+      <div fxFlex [style.padding-left]="'12px'" class="calendar">
+        <app-calendar></app-calendar>
+      </div>
     </div>
   </div>
 </div>
