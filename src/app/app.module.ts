@@ -19,9 +19,18 @@ import { MaterialModule } from './material/material/material.module';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { HotToastModule } from '@ngneat/hot-toast';
 import { ScheduleModule } from '@syncfusion/ej2-angular-schedule';
-import { DayService, WeekService, WorkWeekService, MonthService, AgendaService } from '@syncfusion/ej2-angular-schedule';
+import {
+  DayService,
+  WeekService,
+  WorkWeekService,
+  MonthService,
+  AgendaService,
+} from '@syncfusion/ej2-angular-schedule';
 import { DropDownListAllModule } from '@syncfusion/ej2-angular-dropdowns';
-
+import {
+  DateTimePickerModule,
+  TimePickerModule,
+} from '@syncfusion/ej2-angular-calendars';
 
 import { DashboardComponent } from './components/user/dashboard/dashboard.component';
 import { MapsComponent } from './components/maps/maps.component';
@@ -51,6 +60,8 @@ import { CalendarComponent } from './components/calendar/calendar.component';
   imports: [
     BrowserModule,
     ScheduleModule,
+    DateTimePickerModule,
+    TimePickerModule,
     DropDownListAllModule,
     FlexLayoutModule,
     GoogleMapsModule,
@@ -74,7 +85,13 @@ import { CalendarComponent } from './components/calendar/calendar.component';
       position: 'bottom-center',
     }),
   ],
-  providers: [DayService, WeekService, WorkWeekService, MonthService, AgendaService],
+  providers: [
+    DayService,
+    WeekService,
+    WorkWeekService,
+    MonthService,
+    AgendaService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

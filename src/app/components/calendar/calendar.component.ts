@@ -1,15 +1,16 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { MeetService } from './../../services/meet.service';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import {
   EventSettingsModel,
   CellClickEventArgs,
   ScheduleComponent,
-  PopupOpenEventArgs,
-  ActionEventArgs,
   RenderCellEventArgs,
 } from '@syncfusion/ej2-angular-schedule';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
-import { TextBoxComponent } from '@syncfusion/ej2-angular-inputs';
-import { Internationalization } from '@syncfusion/ej2-base';
+import { StateService } from 'src/app/services/state.service';
+import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-calendar',
@@ -23,42 +24,54 @@ export class CalendarComponent implements OnInit {
     minimumEventDuration: 60,
   };
   @ViewChild('scheduleObj') scheduleObj!: ScheduleComponent;
-  @ViewChild('eventTypeObj')
-  eventTypeObj!: DropDownListComponent;
-  @ViewChild('titleObj')
-  titleObj!: TextBoxComponent;
-  @ViewChild('notesObj')
-  notesObj!: TextBoxComponent;
+  @ViewChild('categoryObj') categoryObj!: DropDownListComponent;
+  @ViewChild('hourObj')
+  hourObj!: DropDownListComponent;
+  presta: any;
+  selectedHour: any;
+  selectedCategory: any;
+
+  hour: any;
+  private _startDate = new BehaviorSubject<any>(null);
+  public startDate$ = this._startDate.asObservable();
   today = new Date();
+  showQuickInfo = false;
   tomorrow = new Date(this.today);
-  daysWork = [1, 2, 3, 4, 5];
-  fakeDisponibilities = [
-    {
-      date: new Date(),
-      appointments: [
-        {
-          id: 1,
-          category: 0,
-          userUid: 'userUid',
-          start: '09:00',
-          duration: 60,
-        },
-      ],
-    },
-  ];
+  workDays = [1, 2, 3, 4, 5];
+  prestaMeets: any = [];
   disponibilities: any[] = [];
-  clickCount = 1;
-  constructor() {
+
+  constructor(
+    private stateService: StateService,
+    private meetService: MeetService,
+    private router: Router
+  ) {
     this.tomorrow.setDate(this.today.getDate() + 1);
-    this.fakeDisponibilities[0].date = this.tomorrow;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.stateService.prestaSelected$.subscribe((presta) => {
+      this.presta = presta;
+    });
+    this.startDate$.subscribe((date) => {
+      console.log(date);
+    });
+  }
+
+  ngOnChanges(): void {
+    console.log(this.presta);
+    this.meetService
+      .getMeetsUserDate(this.presta, this.selectedDate)
+      .subscribe((meets) => {
+        this.prestaMeets = meets;
+        console.log();
+      });
+  }
+
+  // add on change event on this.selectedDate
 
   public selectedDate: Date = new Date();
-  public intl: Internationalization = new Internationalization();
-  public categoriesFields: Object = { text: 'name', value: 'id' };
-  public categories: Object[] = [
+  public categories: any[] = [
     {
       name: "Soins d'hygiène, nursing",
       id: 0,
@@ -129,66 +142,75 @@ export class CalendarComponent implements OnInit {
     },
   ];
 
-  buttonClickActions(e: Event) {
-    const date = this.selectedDate;
-    const categorySelected = this.eventTypeObj.value;
-  }
-
-  onCreated() {
-    // TODO Fetch to disponibilities for the current month (make it as function that take, month, year and day)
-  }
-
   onCellClick(args: CellClickEventArgs) {
-    if (args.element) {
-      const element = args.element as HTMLElement;
-      if (
-        element?.classList.contains('e-disable-dates') ||
-        !element?.classList.contains('e-work-days')
-      ) {
-        this.clickCount = 0;
-      }
+    args.cancel = this.isValidAction(args.startTime);
+    if (args.cancel) {
+      return;
     }
-    this.clickCount++;
-    if (this.clickCount === 1) {
-      this.clickCount = 1;
-      args.cancel = true;
-    } else if (this.clickCount === 2) {
-      // * Show the basic editor
-      args.cancel = false;
-      this.clickCount = 1;
-      this.disponibilities = this.fakeDisponibilities.filter(
-        (dispo) => dispo.date.toDateString() === args.startTime.toDateString()
-      );
-      const startHours =  '09:00';
-      const endHours = '18:00';
-      const durationOfEvent = 60;
-      // TODO Later
-    }
+    const element = args.element as HTMLElement;
+    args.cancel = !element.classList.contains('e-work-days');
+    this._startDate.next(args.startTime.getTime());
+    console.log({
+      uid: this.presta,
+      data: this._startDate.value,
+    });
+    this.meetService
+      .getMeetsUserDate(this.presta, this._startDate.value)
+      .subscribe((meets) => {
+        console.log(meets);
+        this.disponibilities = [];
+        for (let i = 9; i < 18; i++) {
+          const hour = i < 10 ? `0${i}:00` : `${i}:00`;
+          const hourDispo = meets.find((dispo: any) => {
+            return dispo.hour === hour;
+          });
+          if (!hourDispo) {
+            if (i === 12 || i === 13) {
+              continue;
+            }
+            this.disponibilities.push({
+              hour,
+              duration: 60,
+            });
+          }
+        }
+      });
   }
 
-  // * Disable the basic editor
-  onPopupOpen(args: PopupOpenEventArgs) {
-    if (args.type == 'Editor') {
-      args.cancel = true;
-    }
+  onPopupOpen(args: any) {
+    return;
   }
 
-  onActionBegin(args: ActionEventArgs) {
-    if (
-      args.requestType === 'eventCreate' ||
-      args.requestType === 'eventChange' ||
-      args.requestType === 'eventRemove'
-    ) {
-      // check if is really ready
-    }
-  }
-
-  // add scss on the past days
   onRenderCell(args: RenderCellEventArgs): void {
     if (args.date) {
       if (args.date < new Date()) {
         args.element.classList.add('e-disable-dates');
       }
+    }
+  }
+
+  isValidAction(date: Date) {
+    if (!(date.getTime() > this.today.getTime())) {
+      return true;
+    }
+    return false;
+  }
+
+  onBeforeAction(args: any) {
+    if (args.requestType === 'eventCreate') {
+      const description = args.data[0].description;
+      const prestaUid = this.presta;
+      const date = this._startDate.value;
+      // const catagoryUid = this.selectedCategory;
+      const hour = this.selectedHour;
+      const data = {
+        description,
+        prestaUid,
+        date,
+        hour,
+      };
+      this.meetService.createMeet(data);
+      this.router.navigate(['/dashboard']);
     }
   }
 }

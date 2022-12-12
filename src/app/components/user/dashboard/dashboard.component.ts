@@ -1,3 +1,4 @@
+import { MeetService } from './../../../services/meet.service';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -9,16 +10,27 @@ import { AuthService } from 'src/app/services/auth.service';
 export class DashboardComponent implements OnInit {
   userData: any;
   loading = true;
-  constructor(private authService: AuthService) {}
+  myMeets: any = [];
+  constructor(
+    private authService: AuthService,
+    private meetService: MeetService
+  ) {}
 
   ngOnInit(): void {
-    // get uid from local storage
     const userString = localStorage.getItem('user');
     if (userString) {
       const user = JSON.parse(userString);
       this.authService.GetUserData(user.uid).subscribe((userData) => {
         this.loading = false;
         this.userData = userData;
+      });
+      this.meetService.getMyMeets(user.uid).subscribe((meets: any) => {
+        this.myMeets = meets;
+        this.myMeets.forEach((meet: any) => {
+          this.authService.GetUserData(meet.prestaUid).subscribe((presta) => {
+            meet.presta = presta;
+          });
+        });
       });
     }
   }

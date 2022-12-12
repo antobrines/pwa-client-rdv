@@ -22,7 +22,7 @@
       </google-map>
     </div>
     <!-- margin top -->
-    <div fxFlex="40%" class="flex-wrapper" fxLayout="column" fxFlex fxLayoutGap="12px">
+    <div fxFlex="30%" class="flex-wrapper" fxLayout="column" fxFlex fxLayoutGap="12px">
       <div  fxFlex class="scrollable">
         <div *ngFor="let marker of markers">
           <mat-card
@@ -42,7 +42,7 @@
           </mat-card>
         </div>
       </div>
-      <div fxFlex [style.padding-left]="'12px'" class="calendar">
+      <div fxFlex [style.padding-left]="'12px'" class="calendar" *ngIf="prestaClicked">
         <app-calendar></app-calendar>
       </div>
     </div>

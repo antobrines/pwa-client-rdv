@@ -1,52 +1,67 @@
-<ejs-schedule  (cellClick)="onCellClick($event)" (popupOpen)='onPopupOpen($event)' (created)="onCreated()" (renderCell)="onRenderCell($event)" (actionBegin)="onActionBegin($event)" [workDays]='daysWork' [firstDayOfWeek]='1'>
+<ejs-schedule
+  #scheduleObj
+  width="100%"
+  [selectedDate]="selectedDate"
+  [eventSettings]="eventSettings"
+  [showQuickInfo]="showQuickInfo"
+  [workDays]="workDays"
+  [firstDayOfWeek]="1"
+  (renderCell)="onRenderCell($event)"
+  (cellClick)="onCellClick($event)"
+  (cellDoubleClick)="onCellClick($event)"
+  (actionBegin)="onBeforeAction($event)"
+  (popupOpen)="onPopupOpen($event)"
+>
   <e-views>
     <e-view option="Month"></e-view>
   </e-views>
-
-  <ng-template #quickInfoTemplatesHeader let-data>
-    <div class="quick-info-header">
-      <div class="quick-info-header-content">
-        <div class="quick-info-title">Veuillez choisir une date</div>
-      </div>
-    </div>
-  </ng-template>
-  <!-- Content Template -->
-  <ng-template #quickInfoTemplatesContent let-data>
-    <ng-container
-      [ngTemplateOutlet]="cellContent"
-      [ngTemplateOutletContext]="{ data: data }"
-    ></ng-container>
-  </ng-template>
-  <ng-template #cellContent let-data="data">
-    <div class="quick-info-content">
-      <div class="e-cell-content">
-        <div class="content-area">
-          <ejs-dropdownlist
-            id="eventType"
-            #eventTypeObj
-            [dataSource]="categories"
-            [fields]="categoriesFields"
-            placeholder="Choose Type"
-            index="{{ 0 }}"
-            popupHeight="200px"
-          ></ejs-dropdownlist>
-        </div>
-        <div class="content-area"></div>
-      </div>
-    </div>
-  </ng-template>
-  <!-- Footer Template -->
-  <ng-template #quickInfoTemplatesFooter let-data>
-    <ng-container
-      [ngTemplateOutlet]="cellFooter"
-      [ngTemplateOutletContext]="{ data: data }"
-    ></ng-container>
-  </ng-template>
-  <ng-template #cellFooter let-data="data">
-    <div class="e-cell-footer">
-      <button id="add" (click)="buttonClickActions($event)" mat-raised-button>
-        Valider
-      </button>
-    </div>
+  <ng-template #editorTemplate let-data>
+    <table
+      *ngIf="data != undefined"
+      class="custom-event-editor"
+      width="100%"
+      cellpadding="5"
+    >
+      <tbody>
+        <tr>
+          <td>Horaire</td>
+          <td colspan="4">
+            <mat-form-field appearance="fill">
+              <mat-select [(value)]="selectedHour">
+                <mat-option *ngFor="let disponibility of disponibilities" [value]="disponibility.hour">
+                  {{disponibility.hour}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </tr>
+        <!-- <tr>
+          <td class="e-textlabel">Catégorie</td>
+          <td colspan="4">
+            <mat-form-field appearance="fill">
+              <mat-select [(value)]="selectedCategory">
+                <mat-option *ngFor="let category of categories" [value]="category.id">
+                  {{category.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </tr> -->
+        <tr>
+          <td class="e-textlabel">Description</td>
+          <td colspan="4">
+            <textarea
+              id="description"
+              class="e-field e-input"
+              name="description"
+              rows="3"
+              cols="50"
+              value="{{ data.Description }}"
+              style="width: 100%; height: 60px !important; resize: vertical"
+            ></textarea>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </ng-template>
 </ejs-schedule>
