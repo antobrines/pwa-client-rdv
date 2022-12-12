@@ -16,6 +16,7 @@ export  const  environment  =  {
     appId: '${process.env['FIREBASE_APP_ID']}',
     measurementId: '${process.env['FIREBASE_MEASUREMENT_ID']}'
   }
+  syncfusionKey: '${process.env['SYNCFUSION_KEY']}'
 };
 `;
 writeFile(targetPath, envConfigFile, function (err: any) {

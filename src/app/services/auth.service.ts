@@ -41,7 +41,7 @@ export class AuthService {
       .signInWithEmailAndPassword(email, password)
       .then((result) => {
         if (result.user) {
-          this.GetUserData(result.user.uid).subscribe((user) => {
+          this.GetUserData(result.user.uid).subscribe((user: any) => {
             if (user) {
               this.router.navigate(['dashboard']);
             }
@@ -132,5 +132,7 @@ export class AuthService {
     });
   }
 
-  GetAuth() {}
+  GetAuth() {
+    return this.afAuth.currentUser;
+  }
 }

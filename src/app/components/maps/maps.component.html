@@ -1,16 +1,50 @@
-<!-- map in center of the page -->
-<google-map [center]="centerInitial" (boundsChanged)="boundsChange()" width="100%" [options]="options">
-  <map-marker
-    #markerT="mapMarker"
-    *ngFor="let marker of markers"
-    [position]="marker.position"
-    [label]="marker.label"
-    [title]="marker.title"
-    [options]="marker.options"
-    (mapClick)="openInfo(markerT, marker)"
-  >
-  </map-marker>
-
-  <map-info-window>{{ infoContent }}</map-info-window>
-</google-map>
-
+<div fxHide.lt-md>
+  <div fxLayout="row" class="map-container">
+    <div fxFlex="60%" class="flex-wrapper" [style.margin-top]="'12px'">
+      <google-map
+        [center]="centerInitial"
+        (boundsChanged)="boundsChange()"
+        width="100%"
+        height="100%"
+        [options]="options"
+      >
+        <map-marker
+          #markerT="mapMarker"
+          *ngFor="let marker of markers"
+          [position]="marker.position"
+          [label]="marker.label"
+          [title]="marker.title"
+          [options]="marker.options"
+          (mapClick)="openInfo(markerT, marker)"
+        >
+        </map-marker>
+        <map-info-window>{{ infoContent }}</map-info-window>
+      </google-map>
+    </div>
+    <!-- margin top -->
+    <div fxFlex="30%" class="flex-wrapper" fxLayout="column" fxFlex fxLayoutGap="12px">
+      <div  fxFlex class="scrollable">
+        <div *ngFor="let marker of markers">
+          <mat-card
+            [style.margin-top]="'12px'"
+            [style.margin-left]="'12px'"
+            *ngIf="marker.isPrestatary == true"
+            [ngClass]="{'highlight' : marker.isHighlighted}"
+            class="clickable"
+            (click)="onCardClick(marker)"
+          >
+            <mat-card-header fxLayoutAlign="center center">
+              <mat-card-title>{{ marker.title }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Distance: {{ marker.distance }}km</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+      <div fxFlex [style.padding-left]="'12px'" class="calendar" *ngIf="prestaClicked">
+        <app-calendar></app-calendar>
+      </div>
+    </div>
+  </div>
+</div>
