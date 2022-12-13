@@ -17,7 +17,13 @@ export class MeetService {
     userConnected.then((user) => {
       if (user) {
         meet.userUid = user.uid;
-        return this.afs.collection('meets').add(meet);
+        this.authService.GetUserData(user.uid).subscribe((user: any) => {
+          meet.lat = user.lat;
+          meet.lng = user.lng;
+          meet.firstNameUser = user.firstName;
+          meet.lastNameUser = user.lastName;
+          return this.afs.collection('meets').add(meet);
+        });
       }
       return null;
     });
