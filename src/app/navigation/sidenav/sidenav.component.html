@@ -14,7 +14,7 @@
   <a mat-list-item (click)="onSidenavClose(); authService.SignOut();" *ngIf="isLoggedIn">
     <mat-icon>logout</mat-icon><span class="nav-caption"> Déconnexion</span>
   </a>
-  <a mat-list-item (click)="onSidenavClose(); installPwa()" >
+  <a mat-list-item (click)="onSidenavClose(); installPwa()">
     <mat-icon>download</mat-icon><span class="nav-caption"> Installer l'application</span>
   </a>
 </mat-nav-list>
