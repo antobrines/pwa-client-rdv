@@ -10,8 +10,7 @@ import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { StateService } from 'src/app/services/state.service';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
-
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
@@ -44,7 +43,8 @@ export class CalendarComponent implements OnInit {
   constructor(
     private stateService: StateService,
     private meetService: MeetService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) {
     this.tomorrow.setDate(this.today.getDate() + 1);
   }
@@ -59,7 +59,6 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnChanges(): void {
-    console.log(this.presta);
     this.meetService
       .getMeetsUserDate(this.presta, this.selectedDate)
       .subscribe((meets) => {
@@ -196,10 +195,10 @@ export class CalendarComponent implements OnInit {
     return false;
   }
 
-  onBeforeAction(args: any) {
+  async onBeforeAction(args: any) {
     if (args.requestType === 'eventCreate') {
       const description = args.data[0].description;
-      const prestaUid = this.presta;
+      const prestaUid = this.presta.uid;
       const date = this._startDate.value;
       // const catagoryUid = this.selectedCategory;
       const hour = this.selectedHour;
@@ -209,8 +208,29 @@ export class CalendarComponent implements OnInit {
         date,
         hour,
       };
-      this.meetService.createMeet(data);
-      this.router.navigate(['/dashboard']);
+      await this.meetService.createMeet(data);
+      this.meetService.sendMessage(prestaUid);
+      // const headers = new HttpHeaders({
+      //   'Content-Type': 'application/json',
+      //   Authorization:
+      //     'key=AAAAVebqlUY:APA91bHPy6JABJ7TaLFMpIDJ28n6LdIRE5L3jLJD2HdlNqBBhGiI7D6s_hCHznQAdfbPL9IQ7LJoYiMzRdPUn5iL6bA8xCpv0ET8vVoHz6LmichFiWkx_VzLU_7ygR5xTGMwgHg-Iw_3',
+      // });
+      // this.http
+      //   .post(
+      //     'https://fcm.googleapis.com/fcm/send',
+      //     {
+      //       to: 'dAwJGmApq77LelKX1HXwAY:APA91bGSDi5FAYldHjUgz210sg6kZ-tPh9mf5l-ZwTGRp8xtV66dIDPxNNUgU-OoFFn0cr79wuzkFCEJBsOCnGsf7kb4Zx-RXNQEiHn6COk-aCBEJwo1AhaUPaPOUrfNb7DuZsQVhtDq',
+      //       notification: {
+      //         title: 'Nouvelle demande de rendez-vous',
+      //         body: 'Vous avez une nouvelle demande de rendez-vous',
+      //       },
+      //     },
+      //     { headers }
+      //   )
+      //   .subscribe((res) => {
+      //     console.log(res);
+      //   });
+      // this.router.navigate(['/dashboard']);
     }
   }
 }

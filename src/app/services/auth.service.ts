@@ -54,7 +54,7 @@ export class AuthService {
   }
 
   SignUp(user: User, password: string) {
-    this.toast.loading('Votre compte est en train d\'être crée', {
+    this.toast.loading("Votre compte est en train d'être crée", {
       id: 'userCreated',
       autoClose: false,
     });
@@ -67,7 +67,6 @@ export class AuthService {
           this.SignOut(false);
           this.toast.close('userCreated');
         });
-
       })
       .catch((error) => {
         this.toast.close('userCreated');
@@ -77,9 +76,11 @@ export class AuthService {
 
   SendVerificationMail() {
     return this.afAuth.currentUser
-      .then((u: any) => u.sendEmailVerification({
-        url: `${window.location.origin}/confirm-email?confirm=true`,
-      }))
+      .then((u: any) =>
+        u.sendEmailVerification({
+          url: `${window.location.origin}/confirm-email?confirm=true`,
+        })
+      )
       .then(() => {
         // TODO EMAIL PAGE
       });
@@ -123,12 +124,16 @@ export class AuthService {
     return this.afs.doc(`users/${uid}`).valueChanges();
   }
 
+  async getUserData(uid: string): Promise<any> {
+    const user = await this.afs.doc(`users/${uid}`).get().toPromise();
+    return user?.data();
+  }
+
   SignOut(redirect = true) {
     return this.afAuth.signOut().then(() => {
       localStorage.clear();
       this.isLoggedIn.emit(false);
-      if(redirect)
-        this.router.navigate(['']);
+      if (redirect) this.router.navigate(['']);
     });
   }
 

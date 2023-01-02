@@ -8,12 +8,12 @@
 <div *ngIf="loading">
   <app-loading></app-loading>
 </div>
-<div>
+<div >
   RDV : 
   <div *ngFor="let meet of myMeets">
-    {{meet.presta.firstName}}
-    {{meet.hour}}
-    {{meet.date | date: 'dd-MM-YYYY'}}
+    {{meet.presta?.firstName}}
+    {{meet?.hour}}
+    {{meet?.date | date: 'dd-MM-YYYY'}}
   </div>
 </div>
 

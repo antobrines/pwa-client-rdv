@@ -10,7 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 export class DashboardComponent implements OnInit {
   userData: any;
   loading = true;
-  myMeets: any = [];
+  myMeets: any = null;
   constructor(
     private authService: AuthService,
     private meetService: MeetService

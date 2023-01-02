@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, OnInit } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -8,7 +8,7 @@ import { environment } from '../environments/environment';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
@@ -59,6 +59,7 @@ import { CalendarComponent } from './components/calendar/calendar.component';
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     ScheduleModule,
     DateTimePickerModule,
     TimePickerModule,
@@ -94,4 +95,11 @@ import { CalendarComponent } from './components/calendar/calendar.component';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule implements OnInit {
+  ngOnInit() {
+    const savedUrl = sessionStorage.getItem('currentUrl');
+    if (savedUrl) {
+      window.location.href = savedUrl;
+    }
+  }
+}
