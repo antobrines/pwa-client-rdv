@@ -1,4 +1,4 @@
-import { NgModule, OnInit } from '@angular/core';
+import { NgModule, OnInit, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -84,6 +84,12 @@ import { CalendarComponent } from './components/calendar/calendar.component';
     BrowserAnimationsModule,
     HotToastModule.forRoot({
       position: 'bottom-center',
+    }),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
     }),
   ],
   providers: [
