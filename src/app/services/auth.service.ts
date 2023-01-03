@@ -43,7 +43,8 @@ export class AuthService {
         if (result.user) {
           this.GetUserData(result.user.uid).subscribe((user: any) => {
             if (user) {
-              this.router.navigate(['dashboard']);
+              if (user.lastUrl) this.router.navigate(user.lastUrl);
+              else this.router.navigate(['dashboard']);
             }
           });
         }
@@ -139,5 +140,10 @@ export class AuthService {
 
   GetAuth() {
     return this.afAuth.currentUser;
+  }
+
+  async saveNavigation(url: string) {
+    const user = await this.GetAuth();
+    await this.afs.doc(`users/${user?.uid}`).update({ lastUrl: url });
   }
 }

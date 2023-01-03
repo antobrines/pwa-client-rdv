@@ -31,7 +31,8 @@ export class SidenavComponent implements OnInit {
     if (this.installPromptEvent) {
       const outcome = await this.installPromptEvent.prompt();
       if (outcome === 'accepted') {
-        console.log('PWA installed');
+        const url = window.location.href;
+        this.authService.saveNavigation(url);
       } else {
         console.log('PWA installation cancelled');
       }
