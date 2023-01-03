@@ -6,7 +6,6 @@ import {
   ScheduleComponent,
   RenderCellEventArgs,
 } from '@syncfusion/ej2-angular-schedule';
-import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { StateService } from 'src/app/services/state.service';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
@@ -23,9 +22,6 @@ export class CalendarComponent implements OnInit {
     minimumEventDuration: 60,
   };
   @ViewChild('scheduleObj') scheduleObj!: ScheduleComponent;
-  @ViewChild('categoryObj') categoryObj!: DropDownListComponent;
-  @ViewChild('hourObj')
-  hourObj!: DropDownListComponent;
   presta: any;
   selectedHour: any;
   selectedCategory: any;

@@ -26,11 +26,6 @@ import {
   MonthService,
   AgendaService,
 } from '@syncfusion/ej2-angular-schedule';
-import { DropDownListAllModule } from '@syncfusion/ej2-angular-dropdowns';
-import {
-  DateTimePickerModule,
-  TimePickerModule,
-} from '@syncfusion/ej2-angular-calendars';
 
 import { DashboardComponent } from './components/user/dashboard/dashboard.component';
 import { MapsComponent } from './components/maps/maps.component';
@@ -61,9 +56,6 @@ import { CalendarComponent } from './components/calendar/calendar.component';
     BrowserModule,
     HttpClientModule,
     ScheduleModule,
-    DateTimePickerModule,
-    TimePickerModule,
-    DropDownListAllModule,
     FlexLayoutModule,
     GoogleMapsModule,
     MaterialModule,
@@ -84,12 +76,6 @@ import { CalendarComponent } from './components/calendar/calendar.component';
     BrowserAnimationsModule,
     HotToastModule.forRoot({
       position: 'bottom-center',
-    }),
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: !isDevMode(),
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
     }),
   ],
   providers: [
